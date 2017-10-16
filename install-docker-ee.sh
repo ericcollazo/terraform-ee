@@ -1,6 +1,4 @@
 #!/bin/bash
-sudo apt-get install openssh-server
-sudo service ssh status
 sudo apt-get update
 
 sudo apt-get install \
@@ -9,15 +7,15 @@ sudo apt-get install \
     curl \
     software-properties-common
 
-curl -fsSL https://storebits.docker.com/ee/ubuntu/sub-fe7c336e-6219-4c02-bd49-7321f64f107f/ubuntu/gpg | sudo apt-key add -
+# curl -fsSL https://storebits.docker.com/ee/ubuntu/sub-fe7c336e-6219-4c02-bd49-7321f64f107f/ubuntu/gpg | sudo apt-key add -
 
-sudo add-apt-repository \
-   "deb [arch=amd64] https://storebits.docker.com/ee/ubuntu/sub-fe7c336e-6219-4c02-bd49-7321f64f107f/ubuntu \
-   $(lsb_release -cs) \
-   stable-17.06"
+# sudo add-apt-repository \
+#    "deb [arch=amd64] https://storebits.docker.com/ee/ubuntu/sub-fe7c336e-6219-4c02-bd49-7321f64f107f/ubuntu \
+#    $(lsb_release -cs) \
+#    stable-17.06"
 
-sudo apt-get update
+# sudo apt-get update
 
-sudo apt-get install docker-ee
+# sudo apt-get install docker-ee
 
-sudo docker run hello-world
+# sudo docker run hello-world
