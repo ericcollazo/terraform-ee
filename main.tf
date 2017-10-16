@@ -31,9 +31,8 @@ resource "digitalocean_droplet" "manager-0" {
   
 }
 
-resource "digitalocean_droplet" "managers" {
-  count = 2
-  name = "manager-${count.index + 1}"
+resource "digitalocean_droplet" "manager-1" {
+  name = "manager-1"
   region = "nyc3"
   size = "2gb"
   image = "ubuntu-16-04-x64"
@@ -55,9 +54,77 @@ resource "digitalocean_droplet" "managers" {
   }  
 }
 
-resource "digitalocean_droplet" "workers" {
-  count = 3
-  name = "worker-${count.index}"
+resource "digitalocean_droplet" "manager-2" {
+  name = "manager-2"
+  region = "nyc3"
+  size = "2gb"
+  image = "ubuntu-16-04-x64"
+  ssh_keys = ["${digitalocean_ssh_key.default.id}"]
+  private_networking = true
+  connection {
+    user     = "root"
+    agent    = true
+  }
+
+  provisioner "remote-exec" {
+    script = "install-docker-ee.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "docker swarm join --token ${data.external.swarm_join_token.result.manager} ${digitalocean_droplet.manager-0.ipv4_address_private}:2377"
+    ]
+  }  
+}
+
+resource "digitalocean_droplet" "worker-0" {
+  name = "worker-0"
+  region = "nyc3"
+  size = "2gb"
+  image = "ubuntu-16-04-x64"
+  ssh_keys = ["${digitalocean_ssh_key.default.id}"]
+  private_networking = true
+  connection {
+    user     = "root"
+    agent    = true
+  }
+
+  provisioner "remote-exec" {
+    script = "install-docker-ee.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "docker swarm join --token ${data.external.swarm_join_token.result.worker} ${digitalocean_droplet.manager-0.ipv4_address_private}:2377"
+    ]
+  }  
+}
+
+resource "digitalocean_droplet" "worker-1" {
+  name = "worker-1"
+  region = "nyc3"
+  size = "2gb"
+  image = "ubuntu-16-04-x64"
+  ssh_keys = ["${digitalocean_ssh_key.default.id}"]
+  private_networking = true
+  connection {
+    user     = "root"
+    agent    = true
+  }
+
+  provisioner "remote-exec" {
+    script = "install-docker-ee.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "docker swarm join --token ${data.external.swarm_join_token.result.worker} ${digitalocean_droplet.manager-0.ipv4_address_private}:2377"
+    ]
+  }  
+}
+
+resource "digitalocean_droplet" "worker-2" {
+  name = "worker-2"
   region = "nyc3"
   size = "2gb"
   image = "ubuntu-16-04-x64"
