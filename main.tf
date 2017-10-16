@@ -38,12 +38,15 @@ data "external" "swarm_join_token" {
   }
 }
 
-resource "digitalocean_droplet" "managers" {
-  names = {
-    "1" = "manager-1"
-    "2" = "manager-2"
+variable "managers" {
+    default = {
+    "0" = "manager-1"
+    "1" = "manager-2"
   }
-  name = "${lookup(digitalocean_droplet.managers.names, count.index)}"
+
+}
+resource "digitalocean_droplet" "managers" {
+  name = "${lookup(var.managers, count.index)}"
   region = "nyc3"
   size = "2gb"
   image = "ubuntu-16-04-x64"
@@ -65,13 +68,15 @@ resource "digitalocean_droplet" "managers" {
   }  
 }
 
-resource "digitalocean_droplet" "workers" {
-  names = {
+variable "workers" {
+    default = {
     "0" = "worker-0"
     "1" = "worker-1"
     "2" = "worker-2"
   }
-  name = "${lookup(digitalocean_droplet.workers.names, count.index)}"
+}
+resource "digitalocean_droplet" "workers" {
+  name = "${lookup(var.workers, count.index)}"
   region = "nyc3"
   size = "2gb"
   image = "ubuntu-16-04-x64"
