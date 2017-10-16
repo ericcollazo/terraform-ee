@@ -31,13 +31,6 @@ resource "digitalocean_droplet" "manager-0" {
   
 }
 
-data "external" "swarm_join_token" {
-  program = ["./get-join-tokens.sh"]
-  query = {
-    host = "${digitalocean_droplet.manager-0.ipv4_address}"
-  }
-}
-
 variable "managers" {
     default = {
     "0" = "manager-1"
@@ -46,7 +39,7 @@ variable "managers" {
 
 }
 resource "digitalocean_droplet" "managers" {
-  name = "${lookup(var.managers, count.index)}"
+  name = "${element(var.managers, count.index)}"
   region = "nyc3"
   size = "2gb"
   image = "ubuntu-16-04-x64"
@@ -76,7 +69,7 @@ variable "workers" {
   }
 }
 resource "digitalocean_droplet" "workers" {
-  name = "${lookup(var.workers, count.index)}"
+  name = "${element(var.workers, count.index)}"
   region = "nyc3"
   size = "2gb"
   image = "ubuntu-16-04-x64"
@@ -96,4 +89,11 @@ resource "digitalocean_droplet" "workers" {
       "docker swarm join --token ${data.external.swarm_join_token.result.worker} ${digitalocean_droplet.manager-0.ipv4_address_private}:2377"
     ]
   }  
+}
+
+data "external" "swarm_join_token" {
+  program = ["./get-join-tokens.sh"]
+  query = {
+    host = "${digitalocean_droplet.manager-0.ipv4_address}"
+  }
 }
