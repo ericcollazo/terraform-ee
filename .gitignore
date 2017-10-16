@@ -12,3 +12,4 @@
 ### Terraform Patch ###
 *.tfvars
 # End of https://www.gitignore.io/api/terraform
+terraform.tfstate.backup

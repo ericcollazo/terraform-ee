@@ -31,15 +31,9 @@ resource "digitalocean_droplet" "manager-0" {
   
 }
 
-variable "managers" {
-    default = {
-    "0" = "manager-1"
-    "1" = "manager-2"
-  }
-
-}
 resource "digitalocean_droplet" "managers" {
-  name = "${element(var.managers, count.index)}"
+  count = 2
+  name = "manager-${count.index + 1}"
   region = "nyc3"
   size = "2gb"
   image = "ubuntu-16-04-x64"
@@ -61,15 +55,9 @@ resource "digitalocean_droplet" "managers" {
   }  
 }
 
-variable "workers" {
-    default = {
-    "0" = "worker-0"
-    "1" = "worker-1"
-    "2" = "worker-2"
-  }
-}
 resource "digitalocean_droplet" "workers" {
-  name = "${element(var.workers, count.index)}"
+  count = 3
+  name = "worker-${count.index}"
   region = "nyc3"
   size = "2gb"
   image = "ubuntu-16-04-x64"
