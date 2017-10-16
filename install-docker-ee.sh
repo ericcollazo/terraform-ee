@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# ********** Install Docker Enterprise Edition **********
 sudo apt-get update -y
 
 sudo apt-get install -y \
